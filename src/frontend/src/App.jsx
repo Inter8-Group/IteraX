@@ -16,7 +16,6 @@ ChartJS.register(LineElement, PointElement, LinearScale, Title, Tooltip, Legend,
 
 function App() {
   const [metodo, setMetodo] = useState("Bisección");
-
   const [funcion, setFuncion] = useState("x**3 - 6*x + 2");
   const [a, setA] = useState(1);
   const [b, setB] = useState(4);
@@ -24,6 +23,7 @@ function App() {
   const [maxIter, setMaxIter] = useState(50);
   const [resultado, setResultado] = useState(null);
   const [x0, setX0] = useState(1.5);
+  const [x1, setX1] = useState(1);
 
   const [matriz, setMatriz] = useState([
     [4, -1, 0],
@@ -53,11 +53,17 @@ function App() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ funcion, a, b, tol, max_iter: maxIter })
         });
-      } else if (metodo === "Gauss-Seidel") {
-        res = await fetch("http://localhost:8000/gauss_seidel", {
+      } else if (metodo === "Regula-Falsi") {
+        res = await fetch("http://localhost:8000/regula_falsi", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ A: matriz, b: vectorB, tol, max_iter: maxIter })
+          body: JSON.stringify({ funcion, a, b, tol, max_iter: maxIter })
+        });
+      } else if (metodo === "Secante") {
+        res = await fetch("http://localhost:8000/secante", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ funcion, x0, x1, tol, max_iter: maxIter })
         });
       } else if (metodo === "Newton-Raphson") {
         res = await fetch("http://localhost:8000/newton", {
@@ -65,12 +71,24 @@ function App() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ funcion, x0, tol, max_iter: maxIter })
         });
+      } else if (metodo === "Gauss-Seidel") {
+        res = await fetch("http://localhost:8000/gauss_seidel", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ A: matriz, b: vectorB, tol, max_iter: maxIter })
+        });
+      } else if (metodo === "Jacobi") {
+        res = await fetch("http://localhost:8000/jacobi", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ A: matriz, b: vectorB, tol, max_iter: maxIter })
+        });
       }
-
+      if (!res.ok) throw new Error("Error en la solicitud");
       const data = await res.json();
       setResultado(data);
-    } catch (e) {
-      alert("Error: " + e.message);
+    } catch (error) {
+      console.error("Error en el cálculo:", error);
     }
   };
 
@@ -84,9 +102,12 @@ function App() {
         <h3>Búsqueda de raíces</h3>
         <button className={metodo === "Bisección" ? "active" : ""} onClick={() => setMetodo("Bisección")}>Bisección</button>
         <button className={metodo === "Newton-Raphson" ? "active" : ""} onClick={() => setMetodo("Newton-Raphson")}>Newton-Raphson</button>
+        <button className={metodo === "Regula-Falsi" ? "active" : ""} onClick={() => setMetodo("Regula-Falsi")}>Regula-Falsi</button>
+        <button className={metodo === "Secante" ? "active" : ""} onClick={() => setMetodo("Secante")}>Secante</button>
 
         <h3>Solución de sistemas</h3>
         <button className={metodo === "Gauss-Seidel" ? "active" : ""} onClick={() => setMetodo("Gauss-Seidel")}>Gauss-Seidel</button>
+        <button className={metodo === "Jacobi" ? "active" : ""} onClick={() => setMetodo("Jacobi")}>Jacobi</button>
       </div>
 
       <div className="main">
@@ -95,6 +116,8 @@ function App() {
         <div className="contenido">
           <div className="formulario">
             <p><strong>Ingrese los datos:</strong></p>
+
+
 
             {metodo === "Newton-Raphson" && (
               <>
@@ -117,7 +140,43 @@ function App() {
                 <input type="number" value={b} onChange={e => setB(e.target.value)} />
               </>
             )}
+            {metodo === "Secante" && (
+              <>
+                <label>Función f(x):</label>
+                <input value={funcion} onChange={e => setFuncion(e.target.value)} />
 
+                <label>Valor inicial x₀:</label>
+                <input type="number" value={x0} onChange={e => setX0(e.target.value)} />
+
+                <label>Valor inicial x₁:</label>
+                <input type="number" value={x1} onChange={e => setX1(e.target.value)} />
+
+                <label>Tolerancia:</label>
+                <input type="number" step="any" value={tol} onChange={e => setTolerancia(e.target.value)} />
+
+                <label>Iteraciones máximas:</label>
+                <input type="number" value={maxIter} onChange={e => setMaxIter(e.target.value)} />
+
+              </>
+            )}
+            {metodo === "Regula-Falsi" && (
+              <>
+                <label>Función f(x):</label>
+                <input value={funcion} onChange={e => setFuncion(e.target.value)} />
+
+                <label>Extremo izquierdo a:</label>
+                <input type="number" value={a} onChange={e => setA(e.target.value)} />
+
+                <label>Extremo derecho b:</label>
+                <input type="number" value={b} onChange={e => setB(e.target.value)} />
+
+                <label>Tolerancia:</label>
+                <input type="number" step="any" value={tol} onChange={e => setTolerancia(e.target.value)} />
+
+                <label>Iteraciones máximas:</label>
+                <input type="number" value={maxIter} onChange={e => setMaxIter(e.target.value)} />
+              </>
+            )}
             {metodo === "Gauss-Seidel" && (
               <>
                 <label>Matriz A:</label>
@@ -149,6 +208,41 @@ function App() {
                 </div>
               </>
             )}
+            {metodo === "Jacobi" && (
+              <>
+                <label>Matriz A:</label>
+                {matriz.map((fila, i) => (
+                  <div key={i} style={{ display: "flex", gap: "10px" }}>
+                    {fila.map((valor, j) => (
+                      <input
+                        key={j}
+                        type="number"
+                        value={valor}
+                        onChange={e => actualizarMatriz(i, j, e.target.value)}
+                        style={{ width: "60px" }}
+                      />
+                    ))}
+                  </div>
+                ))}
+
+                <label>Vector b:</label>
+                {vectorB.map((valor, i) => (
+                  <input
+                    key={i}
+                    type="number"
+                    value={valor}
+                    onChange={e => actualizarVectorB(i, e.target.value)}
+                  />
+                ))}
+
+                <label>Tolerancia:</label>
+                <input type="number" step="any" value={tol} onChange={e => setTolerancia(e.target.value)} />
+
+                <label>Iteraciones máximas:</label>
+                <input type="number" value={maxIter} onChange={e => setMaxIter(e.target.value)} />
+              </>
+            )}
+
 
             <label>Tolerancia:</label>
             <input type="number" value={tol} onChange={e => setTol(e.target.value)} />
@@ -196,8 +290,8 @@ function App() {
                       data: metodo === "Bisección"
                         ? resultado.pasos.map(p => ({ x: p.c, y: p["f(c)"] }))
                         : metodo === "Newton-Raphson"
-                        ? resultado.pasos.map(p => ({ x: p.x, y: p["f(x)"] }))
-                        : [],
+                          ? resultado.pasos.map(p => ({ x: p.x, y: p["f(x)"] }))
+                          : [],
                       pointBackgroundColor: 'red',
                       pointBorderColor: 'red',
                       showLine: false,
@@ -265,8 +359,35 @@ function App() {
         )}
 
         {resultado?.raiz !== undefined &&
-        metodo === "Newton-Raphson" &&
-        resultado.pasos?.[0]?.x !== undefined && (
+          metodo === "Newton-Raphson" &&
+          resultado.pasos?.[0]?.x !== undefined && (
+            <div className="resultado">
+              <h2>Raíz aproximada: {Number(resultado.raiz).toFixed(4)}</h2>
+              <h3>Iteraciones:</h3>
+              <table className="resultado-table">
+                <thead>
+                  <tr>
+                    <th>Iteración</th>
+                    <th>x</th>
+                    <th>f(x)</th>
+                    <th>Error</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {resultado.pasos.map((fila, i) => (
+                    <tr key={i}>
+                      <td>{fila.iteracion}</td>
+                      <td>{fila.x.toFixed(6)}</td>
+                      <td>{fila["f(x)"].toExponential(3)}</td>
+                      <td>{fila.error.toExponential(3)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+        {resultado?.raiz !== undefined && metodo === "Regula-Falsi" && (
           <div className="resultado">
             <h2>Raíz aproximada: {Number(resultado.raiz).toFixed(4)}</h2>
             <h3>Iteraciones:</h3>
@@ -274,8 +395,38 @@ function App() {
               <thead>
                 <tr>
                   <th>Iteración</th>
-                  <th>x</th>
-                  <th>f(x)</th>
+                  <th>a</th>
+                  <th>b</th>
+                  <th>c</th>
+                  <th>f(c)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {resultado.pasos.map((fila, i) => (
+                  <tr key={i}>
+                    <td>{fila.iteracion}</td>
+                    <td>{Number(fila.a).toFixed(4)}</td>
+                    <td>{Number(fila.b).toFixed(4)}</td>
+                    <td>{Number(fila.c).toFixed(4)}</td>
+                    <td>{Number(fila["f(c)"]).toExponential(3)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {resultado?.raiz !== undefined && metodo === "Secante" && (
+          <div className="resultado">
+            <h2>Raíz aproximada: {Number(resultado.raiz).toFixed(4)}</h2>
+            <h3>Iteraciones:</h3>
+            <table className="resultado-table">
+              <thead>
+                <tr>
+                  <th>Iteración</th>
+                  <th>x0</th>
+                  <th>x1</th>
+                  <th>f(x0)</th>
                   <th>Error</th>
                 </tr>
               </thead>
@@ -283,9 +434,10 @@ function App() {
                 {resultado.pasos.map((fila, i) => (
                   <tr key={i}>
                     <td>{fila.iteracion}</td>
-                    <td>{fila.x.toFixed(6)}</td>
-                    <td>{fila["f(x)"].toExponential(3)}</td>
-                    <td>{fila.error.toExponential(3)}</td>
+                    <td>{Number(fila.x0).toFixed(4)}</td>
+                    <td>{Number(fila.x1).toFixed(4)}</td>
+                    <td>{Number(fila["f(x0)"]).toExponential(3)}</td>
+                    <td>{Number(fila.error).toExponential(3)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -297,6 +449,32 @@ function App() {
         {resultado?.solucion && metodo === "Gauss-Seidel" && (
           <div className="resultado">
             <h2>Solución del sistema:</h2>
+            <p>{resultado.solucion.map((v, i) => `x${i + 1} = ${v.toFixed(5)}`).join(" | ")}</p>
+            <h3>Iteraciones:</h3>
+            <table className="resultado-table">
+              <thead>
+                <tr>
+                  <th>Iteración</th>
+                  <th>Valores</th>
+                  <th>Error</th>
+                </tr>
+              </thead>
+              <tbody>
+                {resultado.pasos.map((fila, i) => (
+                  <tr key={i}>
+                    <td>{fila.iteracion}</td>
+                    <td>{fila.valores.map(v => v.toFixed(4)).join(", ")}</td>
+                    <td>{fila.error.toExponential(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {resultado?.solucion && metodo === "Jacobi" && (
+          <div className="resultado">
+            <h2>Solucion del sistema:</h2>
             <p>{resultado.solucion.map((v, i) => `x${i + 1} = ${v.toFixed(5)}`).join(" | ")}</p>
             <h3>Iteraciones:</h3>
             <table className="resultado-table">
