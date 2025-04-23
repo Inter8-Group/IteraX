@@ -8,6 +8,7 @@ from typing import List
 from fastapi.middleware.cors import CORSMiddleware
 from sympy import symbols, diff, sympify
 from methods.secant import secant
+from methods.regula_falsi import regula_falsi
 import math
 
 app = FastAPI()
@@ -51,6 +52,14 @@ class SecantInput(BaseModel):
     tol: float
     max_iter: int
 
+# Modelo para método de Regula Falsi
+class RegulaFalsiInput(BaseModel):
+    funcion: str
+    a: float
+    b: float
+    tol: float
+    max_iter: int
+
 
 @app.post("/biseccion")
 def calcular_biseccion(data: BiseccionInput):
@@ -61,7 +70,7 @@ def calcular_biseccion(data: BiseccionInput):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.post("/gauss_seidel")
+@app.post("/gauss-seidel")
 def resolver_sistema(data: SistemaInput):
     try:
         solucion, iteraciones = gauss_seidel(data.A, data.b, data.tol, data.max_iter)
@@ -93,7 +102,15 @@ def calcular_newton(data: NewtonInput):
 def secant_controller(data: SecantInput):
     try:
         f = lambda x: eval(data.funcion, {"x": x, "math": math})
-        raiz, passos = secant(f, data.x0, data.x1, data.tol, data.max_iter)
-        return {"raiz": raiz, "pasos": passos}
+        raiz, pasos = secant(f, data.x0, data.x1, data.tol, data.max_iter)
+        return {"raiz": raiz, "pasos": pasos}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/regula-falsi")
+def calcular_regula_falsi(data: RegulaFalsiInput):
+    try:
+        raiz, pasos = regula_falsi(data.funcion, data.a, data.b, data.max_iter, data.tol)
+        return {"raiz": raiz, "pasos": pasos}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
