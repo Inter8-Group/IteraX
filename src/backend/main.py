@@ -1,7 +1,7 @@
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-# from methods.biseccion import biseccion
+from methods.bisection import bisection
 from methods.gauss_seidel import gauss_seidel
 from methods.newton import newton_raphson
 from typing import List
@@ -43,14 +43,14 @@ class SistemaInput(BaseModel):
     max_iter: int
 
 
-# @app.post("/biseccion")
-# def calcular_biseccion(data: BiseccionInput):
-#     try:
-#         f = lambda x: eval(data.funcion, {"x": x, "math": math})
-#         raiz, pasos = biseccion(f, data.a, data.b, data.tol, data.max_iter)
-#         return {"raiz": raiz, "pasos": pasos}
-#     except Exception as e:
-#         raise HTTPException(status_code=400, detail=str(e))
+@app.post("/biseccion")
+def calcular_biseccion(data: BiseccionInput):
+    try:
+        f = lambda x: eval(data.funcion, {"x": x, "math": math})
+        raiz, pasos = bisection(f, data.a, data.b, data.tol, data.max_iter)
+        return {"raiz": raiz, "pasos": pasos}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/gauss_seidel")
 def resolver_sistema(data: SistemaInput):
