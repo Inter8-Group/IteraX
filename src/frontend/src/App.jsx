@@ -162,12 +162,6 @@ function App() {
 
                 <label>Extremo derecho b:</label>
                 <input type="number" value={b} onChange={e => setB(e.target.value)} />
-
-                <label>Tolerancia:</label>
-                <input type="number" step="any" value={tol} onChange={e => setTolerancia(e.target.value)} />
-
-                <label>Iteraciones máximas:</label>
-                <input type="number" value={maxIter} onChange={e => setMaxIter(e.target.value)} />
               </>
             )}
             {metodo === "Gauss-Seidel" && (
@@ -227,12 +221,6 @@ function App() {
                     onChange={e => actualizarVectorB(i, e.target.value)}
                   />
                 ))}
-
-                <label>Tolerancia:</label>
-                <input type="number" step="any" value={tol} onChange={e => setTolerancia(e.target.value)} />
-
-                <label>Iteraciones máximas:</label>
-                <input type="number" value={maxIter} onChange={e => setMaxIter(e.target.value)} />
               </>
             )}
 
