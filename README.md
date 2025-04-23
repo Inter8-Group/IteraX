@@ -6,6 +6,23 @@ It is composed of two parts: **Frontend** (React) and **Backend** (Python - Fast
 
 ---
 
+## 🎯 Motivation
+
+**IteraX** was developed as part of an academic project for an evaluation at **UCASAL (Universidad Católica de Salta)**. The objective was to demonstrate the practical application of numerical methods through a full-stack solution, reinforcing concepts of algorithmic logic, software architecture, and user interface design.
+
+**Team Members:**
+- **[Agustín](https://github.com/Juarex9)**
+- **[Alejo](https://github.com/aaalejo8)**
+- **[Cate Daruich](https://github.com/catedaruich)**
+- **[Cristiane](https://github.com/andrdcris)**
+- **[Guada](https://github.com/Guada2-dot)**
+- **[Joselito Júnior](https://github.com/joselitojunior)**
+- **[Luciano Lazarte](https://github.com/Jehp23)**
+- **[Máximo Cordoba](https://github.com/maxicordoba22)**
+- **[Máximo Echa](https://github.com/zMax98)**
+
+---
+
 ## 🧠 About the Methods
 
 The backend provides six numerical methods for finding the roots of a function:
