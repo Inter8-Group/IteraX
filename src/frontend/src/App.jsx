@@ -60,7 +60,7 @@ function App() {
           body: JSON.stringify({ funcion, a, b, tol, max_iter: maxIter })
         });
       } else if (metodo === "Secante") {
-        res = await fetch("http://localhost:8000/secante", {
+        res = await fetch("http://localhost:8000/secant", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ funcion, x0, x1, tol, max_iter: maxIter })
@@ -150,13 +150,6 @@ function App() {
 
                 <label>Valor inicial x₁:</label>
                 <input type="number" value={x1} onChange={e => setX1(e.target.value)} />
-
-                <label>Tolerancia:</label>
-                <input type="number" step="any" value={tol} onChange={e => setTolerancia(e.target.value)} />
-
-                <label>Iteraciones máximas:</label>
-                <input type="number" value={maxIter} onChange={e => setMaxIter(e.target.value)} />
-
               </>
             )}
             {metodo === "Regula-Falsi" && (

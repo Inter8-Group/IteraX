@@ -7,6 +7,7 @@ from methods.newton import newton_raphson
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
 from sympy import symbols, diff, sympify
+from methods.secant import secant
 import math
 
 app = FastAPI()
@@ -39,6 +40,14 @@ class NewtonInput(BaseModel):
 class SistemaInput(BaseModel):
     A: List[List[float]]
     b: List[float]
+    tol: float
+    max_iter: int
+
+# Modelo para el método secante
+class SecantInput(BaseModel):
+    funcion: str
+    x0: float
+    x1: float
     tol: float
     max_iter: int
 
@@ -77,5 +86,14 @@ def calcular_newton(data: NewtonInput):
         # Calcular raíz e iteraciones
         raiz, pasos = newton_raphson(f, df, data.x0, data.tol, data.max_iter)
         return {"raiz": raiz, "pasos": pasos}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
+@app.post("/secant")
+def secant_controller(data: SecantInput):
+    try:
+        f = lambda x: eval(data.funcion, {"x": x, "math": math})
+        raiz, passos = secant(f, data.x0, data.x1, data.tol, data.max_iter)
+        return {"raiz": raiz, "pasos": passos}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
