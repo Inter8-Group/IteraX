@@ -54,13 +54,13 @@ function App() {
           body: JSON.stringify({ funcion, a, b, tol, max_iter: maxIter })
         });
       } else if (metodo === "Regula-Falsi") {
-        res = await fetch("http://localhost:8000/regula_falsi", {
+        res = await fetch("http://localhost:8000/regula-falsi", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ funcion, a, b, tol, max_iter: maxIter })
         });
       } else if (metodo === "Secante") {
-        res = await fetch("http://localhost:8000/secante", {
+        res = await fetch("http://localhost:8000/secant", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ funcion, x0, x1, tol, max_iter: maxIter })
@@ -72,7 +72,7 @@ function App() {
           body: JSON.stringify({ funcion, x0, tol, max_iter: maxIter })
         });
       } else if (metodo === "Gauss-Seidel") {
-        res = await fetch("http://localhost:8000/gauss_seidel", {
+        res = await fetch("http://localhost:8000/gauss-seidel", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ A: matriz, b: vectorB, tol, max_iter: maxIter })
@@ -150,13 +150,6 @@ function App() {
 
                 <label>Valor inicial x₁:</label>
                 <input type="number" value={x1} onChange={e => setX1(e.target.value)} />
-
-                <label>Tolerancia:</label>
-                <input type="number" step="any" value={tol} onChange={e => setTolerancia(e.target.value)} />
-
-                <label>Iteraciones máximas:</label>
-                <input type="number" value={maxIter} onChange={e => setMaxIter(e.target.value)} />
-
               </>
             )}
             {metodo === "Regula-Falsi" && (
@@ -169,12 +162,6 @@ function App() {
 
                 <label>Extremo derecho b:</label>
                 <input type="number" value={b} onChange={e => setB(e.target.value)} />
-
-                <label>Tolerancia:</label>
-                <input type="number" step="any" value={tol} onChange={e => setTolerancia(e.target.value)} />
-
-                <label>Iteraciones máximas:</label>
-                <input type="number" value={maxIter} onChange={e => setMaxIter(e.target.value)} />
               </>
             )}
             {metodo === "Gauss-Seidel" && (
@@ -234,15 +221,8 @@ function App() {
                     onChange={e => actualizarVectorB(i, e.target.value)}
                   />
                 ))}
-
-                <label>Tolerancia:</label>
-                <input type="number" step="any" value={tol} onChange={e => setTolerancia(e.target.value)} />
-
-                <label>Iteraciones máximas:</label>
-                <input type="number" value={maxIter} onChange={e => setMaxIter(e.target.value)} />
               </>
             )}
-
 
             <label>Tolerancia:</label>
             <input type="number" value={tol} onChange={e => setTol(e.target.value)} />
