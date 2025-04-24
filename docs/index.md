@@ -210,6 +210,88 @@ def secant(f, x0, x1, tol, max_iter):
 5. **Manejo de errores**  
    En caso de que la diferencia entre las evaluaciones de la función \(f(x_1) - f(x_0)\) sea cero, se lanza un error indicando que hubo una división por cero, lo que puede ocurrir si los dos puntos iniciales son iguales o si la función tiene un comportamiento inesperado.
 
+### 3.5 Gauss-Seidel
+
+El **método de Gauss-Seidel** es una técnica numérica iterativa utilizada para resolver sistemas de ecuaciones lineales del tipo:
+
+\[
+Ax = b
+\]
+
+A diferencia del método de Gauss-Jacobi, este algoritmo utiliza los **valores recién actualizados** dentro de la misma iteración para acelerar la convergencia. Es particularmente eficiente cuando se trabaja con matrices diagonales dominantes o matrices simétricas definidas positivas.
+
+---
+
+#### Implementación en IteraX
+
+El método de Gauss-Seidel ha sido implementado en IteraX de la siguiente manera:
+
+```python
+def gauss_seidel(A, b, tol=1e-5, max_iter=100):
+    n = len(A)
+    x = [0.0 for _ in range(n)]
+    pasos = []
+
+    for iteracion in range(1, max_iter + 1):
+        x_new = x.copy()
+        for i in range(n):
+            suma = sum(A[i][j] * x_new[j] if j < i else A[i][j] * x[j] for j in range(n) if j != i)
+            x_new[i] = (b[i] - suma) / A[i][i]
+        
+        error = max(abs(x_new[i] - x[i]) for i in range(n))
+        pasos.append({"iteracion": iteracion, "valores": x_new.copy(), "error": error})
+
+        if error < tol:
+            return x_new, pasos
+        x = x_new
+
+    return x, pasos
+```
+
+---
+
+#### Explicación del algoritmo
+
+1. **Valores iniciales**  
+   Se inicia con un vector de solución estimada \( x \), comúnmente con todos sus elementos en cero, aunque puede ser definido por el usuario. Este vector se irá actualizando en cada iteración.
+
+2. **Fórmula de actualización**  
+   Para cada variable \( x_i \), se calcula su nuevo valor usando la fórmula:
+
+   \[
+   x_i^{(k+1)} = \frac{1}{A_{ii}} \left(b_i - \sum_{j \neq i} A_{ij} x_j^{(*)}\right)
+   \]
+
+   Donde \( x_j^{(*)} \) representa:
+   - El nuevo valor \( x_j^{(k+1)} \), si ya fue calculado en la iteración actual.
+   - El valor anterior \( x_j^{(k)} \), si aún no se actualizó.
+
+3. **Condición de parada**  
+   El método se detiene si el **error máximo absoluto** entre dos iteraciones consecutivas es menor que una tolerancia establecida:
+
+   \[
+   \max_i \left|x_i^{(k+1)} - x_i^{(k)}\right| < \text{tol}
+   \]
+
+   También finaliza si se alcanza el número máximo de iteraciones (`max_iter`).
+
+4. **Resultados**  
+   En cada iteración se almacena:
+   - El número de la iteración actual
+   - El vector solución calculado en esa iteración
+   - El error absoluto máximo respecto a la iteración anterior
+
+   Estos datos se guardan en una lista llamada `pasos`, útil para analizar la convergencia del sistema.  
+   Finalmente, se retorna:
+   - El vector solución \( x \) aproximado
+   - La lista de pasos realizados durante las iteraciones
+
+5. **Manejo de errores**  
+   El método no garantiza convergencia si la matriz \( A \) no cumple ciertas propiedades. Para aumentar las chances de convergencia, se recomienda que \( A \) sea **diagonalmente dominante** o **simétrica definida positiva**. En caso de no converger dentro de `max_iter`, se retorna la última aproximación disponible junto con el historial completo.
+
+
+
+
 ### 3.6 Gauss-Jacobi
 El **método de Gauss-Jacobi** es una técnica iterativa utilizada para resolver sistemas de ecuaciones lineales de la forma:
 
