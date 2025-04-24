@@ -150,6 +150,79 @@ Si los valores iniciales no cumplen que f(a)⋅f(b)<0, se lanza un error para ev
 
 ### 3.3 Newton-Raphson
 
+El **método de Newton-Raphson** es una técnica numérica iterativa utilizada para encontrar raíces de funciones reales de la forma:
+
+\[
+f(x) = 0
+\]
+
+Es uno de los métodos más utilizados por su velocidad de convergencia, siempre que la función sea diferenciable y la derivada no se anule cerca del punto inicial.
+
+---
+
+#### Implementación en IteraX
+
+El método de Newton-Raphson ha sido implementado en IteraX de la siguiente manera:
+
+```python
+def newton_raphson(f, df, x0, tol, max_iter):
+    pasos = []
+    for i in range(1, max_iter + 1):
+        fx = f(x0)
+        dfx = df(x0)
+        if dfx == 0:
+            raise ValueError("La derivada es cero en x = {:.4f}".format(x0))
+        x1 = x0 - fx / dfx
+        error = abs(x1 - x0)
+        pasos.append({"iteracion": i, "x": x0, "f(x)": fx, "error": error})
+        if error < tol:
+            return x1, pasos
+        x0 = x1
+    return x1, pasos
+```
+
+---
+
+#### Explicación del algoritmo
+
+1. **Valor inicial**
+   Se comienza con un valor inicial \( x0 \), elegido por el usuario. Es importante que esté cerca de la raíz buscada.
+
+2. **Fórmula de actualización**
+   En cada iteración, se calcula un nuevo valor \( x1 \) a partir de:
+
+   ![image](https://github.com/user-attachments/assets/a2b56962-8bd8-4087-a79b-1e5136b4ac2f)
+
+   Este valor se obtiene restando al punto actual el cociente entre la función evaluada y su derivada en ese punto.
+
+3. **Condición de parada**
+   El algoritmo se detiene si:
+
+   - El **error absoluto** ![image](https://github.com/user-attachments/assets/655f0400-5d40-466e-bd71-a03b71701489)
+   - O si se alcanza el número máximo de iteraciones `max_iter`
+
+4. **Resultados**
+   En cada paso se guarda:
+   - La iteración actual
+   - El valor de \( xn \)
+   - La evaluación de la función \( f(xn) \)
+   - El error absoluto con respecto a la iteración anterior
+
+   Estos valores se almacenan en una lista llamada `pasos`. Al finalizar, el método retorna:
+   - La raíz aproximada \( x \)
+   - La lista de pasos realizados
+
+5. **Manejo de errores**
+   Si la derivada \( f'(x) \) se anula en algún punto del proceso, se lanza un error para evitar una división por cero. Esto indica que el método no puede continuar desde ese punto.
+
+---
+
+#### Recomendaciones
+
+- Elegir un valor inicial \( x0 \) cercano a la raíz.
+- Verificar que \( f'(x0) \neq 0 \) para evitar errores.
+- Ideal para funciones suaves y con derivadas conocidas.
+
 ### 3.4 Secante
 
 El **método de la Secante** es una técnica iterativa que permite aproximar las raíces de una función \(f(x) = 0\). A diferencia del método de Newton-Raphson, que requiere el cálculo de la derivada de la función, el método de la secante utiliza dos puntos iniciales para aproximar la pendiente de la función en cada iteración.
