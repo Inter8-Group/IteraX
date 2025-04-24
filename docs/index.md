@@ -258,9 +258,8 @@ def gauss_seidel(A, b, tol=1e-5, max_iter=100):
 2. **Fórmula de actualización**  
    Para cada variable \( x_i \), se calcula su nuevo valor usando la fórmula:
 
-   \[
-   x_i^{(k+1)} = \frac{1}{A_{ii}} \left(b_i - \sum_{j \neq i} A_{ij} x_j^{(*)}\right)
-   \]
+   ![image](https://github.com/user-attachments/assets/db9b1dcd-0171-400a-b2b8-18cc3fd390e1)
+
 
    Donde \( x_j^{(*)} \) representa:
    - El nuevo valor \( x_j^{(k+1)} \), si ya fue calculado en la iteración actual.
