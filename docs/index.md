@@ -261,16 +261,14 @@ def gauss_seidel(A, b, tol=1e-5, max_iter=100):
    ![image](https://github.com/user-attachments/assets/db9b1dcd-0171-400a-b2b8-18cc3fd390e1)
 
 
-   Donde \( x_j^{(*)} \) representa:
-   - El nuevo valor \( x_j^{(k+1)} \), si ya fue calculado en la iteración actual.
-   - El valor anterior \( x_j^{(k)} \), si aún no se actualizó.
+   Donde ![image](https://github.com/user-attachments/assets/dd7a4da0-377b-4d42-a6fc-905eb2ef920b) representa:
+   - El nuevo valor ![image](https://github.com/user-attachments/assets/63a22e8c-2036-4935-880f-12b672511b9a), si ya fue calculado en la iteración actual.
+   - El valor anterior ![image](https://github.com/user-attachments/assets/ac4ffca1-90e1-4611-8015-8044ed97d512), si aún no se actualizó.
 
 3. **Condición de parada**  
    El método se detiene si el **error máximo absoluto** entre dos iteraciones consecutivas es menor que una tolerancia establecida:
 
-   \[
-   \max_i \left|x_i^{(k+1)} - x_i^{(k)}\right| < \text{tol}
-   \]
+   ![image](https://github.com/user-attachments/assets/65f121e1-cf7e-4f4c-8243-2ba4a3dc86db)
 
    También finaliza si se alcanza el número máximo de iteraciones (`max_iter`).
 
