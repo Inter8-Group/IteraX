@@ -67,6 +67,84 @@ Con esta arquitectura modular y clara, **IteraX** garantiza una separación efic
 ## 3. Métodos Numéricos Implementados
 
 ### 3.1 Bisección
+El método de la bisección es una técnica numérica iterativa utilizada para hallar raíces reales de funciones continuas. Se basa en el teorema de Bolzano, que garantiza que si una función continua cambia de signo en un intervalo [a,b], entonces existe al menos una raíz en dicho intervalo.
+A diferencia de métodos como Newton-Raphson, que requieren derivadas, el método de la bisección solo necesita que f(a) y f(b) tengan signos opuestos.
+
+####Implementación en IteraX
+El método de la bisección ha sido implementado en IteraX de la siguiente manera:
+
+```python
+def bisection(f, a, b, tol=1e-5, max_iter=100):
+    pasos = []
+
+    # Verificación de signo en los extremos
+    if f(a) * f(b) >= 0:
+        raise ValueError("f(a) y f(b) deben tener signos opuestos")
+
+    for i in range(max_iter):
+        c = (a + b) / 2       # Punto medio
+        fc = f(c)             # Evaluación de la función en c
+        
+        # Registro del paso actual
+        pasos.append({
+            "iteracion": i+1, 
+            "a": a, 
+            "b": b, 
+            "c": c, 
+            "f(c)": fc
+        })
+
+        # Criterios de parada
+        if abs(fc) < tol or abs(b - a) < tol:
+            return c, pasos
+
+        # Ajuste del intervalo
+        if f(a) * fc < 0:
+            b = c
+        else:
+            a = c
+
+    return c, pasos  # Retorna última aproximación si no se cumple tolerancia
+```
+####Explicacion del algoritmo
+1. **Puntos iniciales**
+El algoritmo comienza con dos valores iniciales a y b, que deben ser elegidos por el usuario de modo que la función tenga signos opuestos en los extremos del intervalo:
+
+f(a)*f(b)<0
+Esto garantiza (según el teorema de Bolzano) que existe al menos una raíz entre a y b.
+
+2. **Cálculo del punto medio**
+En cada iteración, se calcula el punto medio del intervalo actual:
+
+c=(a + b )/2
+ 
+Luego se evalúa la función en ese punto f(c). Dependiendo del signo de f(c), se actualiza el intervalo:
+
+Si f(a)*f(c)<0, la raíz está entre a y c, por lo que b = c.
+
+Si no, la raíz está entre c y b, por lo que a = c.
+
+3. **Condición de parada**
+El algoritmo se detiene si se cumple alguna de estas condiciones:
+
+∣f(c)∣<tol
+∣b−a∣<tol
+
+Ambas aseguran que se ha llegado lo suficientemente cerca de una raíz.
+
+4. **Resultados**
+En cada iteración, se almacena un registro con los valores actuales de a, b, c y f(c) en una lista llamada pasos.
+Esto permite visualizar cómo el algoritmo reduce el intervalo.
+Finalmente, el método retorna:
+
+La raíz aproximada c
+
+La lista de pasos realizados
+
+5. **Manejo de errores**
+Si los valores iniciales no cumplen que f(a)⋅f(b)<0, se lanza un error para evitar una ejecución inválida:
+
+    raise ValueError("f(a) y f(b) deben tener signos opuestos")
 
 ### 3.2 Regula Falsi
 
