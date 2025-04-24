@@ -19,7 +19,7 @@ It is composed of two parts: **Frontend** (React) and **Backend** (Python - Fast
 - **[Joselito Júnior](https://github.com/joselitojunior)**
 - **[Luciano Lazarte](https://github.com/Jehp23)**
 - **[Máximo Cordoba](https://github.com/maxicordoba22)**
-- **[Máximo Echa](https://github.com/zMax98)**
+- **[Máximo Echazú](https://github.com/zMax98)**
 
 ---
 
