@@ -583,6 +583,34 @@ Ax=b.
 
 - Salida: solución aproximada y vector de errores en cada iteración.
 
+Aqui está a seção **"Consideraciones finales"** revisada e com os pontos que você pediu:
+
+---
+
 ## 6. Consideraciones finales
 
-<!-- Limitaciones actuales, posibles mejoras, decisiones de diseño técnico -->
+**IteraX** ha sido una solución efectiva y funcional para la resolución de problemas numéricos, implementando seis métodos matemáticos fundamentales. Sin embargo, como cualquier software, siempre existe espacio para mejoras y optimizaciones en diversas áreas. A continuación, se detallan algunas consideraciones importantes sobre el proyecto:
+
+### Mejoras Potenciales
+
+1. **Modularidad**:
+   - Actualmente, el sistema está estructurado de manera que cada método numérico está encapsulado en su propia función dentro del backend. Sin embargo, se podría mejorar aún más la modularidad separando los componentes del backend en microservicios.
+   - Además, se podría implementar un sistema de **plugin** que permita agregar fácilmente nuevos métodos numéricos sin tener que modificar el núcleo de la aplicación.
+
+2. **Arquitectura más limpia y escalable**:
+   - Aunque la estructura actual es efectiva, se podría mejorar la modularidad del código al adoptar patrones como **MVC** (Modelo-Vista-Controlador), lo que aseguraría una separación clara de responsabilidades y facilitaría la extensión del software a futuro.
+   - Se recomienda también refactorizar el backend para adoptar una arquitectura más robusta, como microservicios para que cada algoritmo numérico funcione de manera independiente, lo que haría más fácil el mantenimiento y la escalabilidad.
+
+3. **Despliegue y Escalabilidad**:
+   - Además, se podría utilizar un servicio **cloud hosting** como AWS, Azure o GCP para asegurar que la aplicación sea accesible para usuarios y sin problemas de rendimiento.
+
+4. **Interfaz de Usuario**:
+   - La interfaz de usuario podría mejorar en cuanto a diseño y experiencia de usuario. Aunque funciona bien, sería interesante agregar **visualizaciones interactivas** para mostrar cómo convergen los métodos en tiempo real, lo cual podría ser muy útil en un contexto educativo. Esto podría incluir animaciones o gráficos más dinámicos.
+
+5. **Documentación y Soporte**:
+   - Se podría ampliar la documentación técnica, añadiendo más ejemplos prácticos y tutoriales paso a paso para ayudar a los usuarios a entender mejor cómo usar la aplicación.
+   - Agregar **soporte multi-idioma** también sería una excelente mejora, permitiendo que el proyecto sea utilizado por usuarios de diferentes países.
+
+### Conclusión
+
+**IteraX** fue desarrollado como parte de un proyecto académico en **UCASAL**, y cumple con su objetivo principal: ofrecer una herramienta simple y eficiente para resolver problemas numéricos. Las consideraciones mencionadas representan áreas donde el software podría crecer, adaptarse y mejorar para satisfacer necesidades más complejas o integrarse mejor en entornos profesionales. No obstante, el sistema actual ya proporciona una base sólida y eficaz para resolver ecuaciones y sistemas de ecuaciones de manera rápida.
