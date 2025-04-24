@@ -233,80 +233,91 @@ function App() {
             <button className="calcular" onClick={calcular}>Calcular</button>
           </div>
 
-          {resultado?.raiz !== undefined && (metodo === "Bisección" || metodo === "Newton-Raphson") && (
-            <div className="grafico">
-              <h3>Gráfico de f(x):</h3>
-              <Line
-                data={{
-                  datasets: [
-                    {
-                      label: 'f(x)',
-                      data: Array.from({ length: 100 }, (_, i) => {
-                        let left, right;
-                        if (metodo === "Bisección") {
-                          left = a;
-                          right = b;
-                        } else if (metodo === "Newton-Raphson") {
-                          const xs = resultado.pasos.map(p => p.x);
-                          const minX = Math.min(...xs);
-                          const maxX = Math.max(...xs);
-                          const margin = (maxX - minX) * 0.2 || 1; // si da 0, usar margen 1
-                          left = minX - margin;
-                          right = maxX + margin;
-                        }
-                        const xVal = left + (right - left) * (i / 99);
-                        try {
-                          return { x: xVal, y: eval(funcion.replace(/x/g, `(${xVal})`)) };
-                        } catch {
-                          return { x: xVal, y: null };
-                        }
-                      }),
-                      borderColor: 'blue',
-                      tension: 0.3,
-                      fill: false,
-                    },
-                    {
-                      label: 'Puntos de iteración',
-                      data: metodo === "Bisección"
-                        ? resultado.pasos.map(p => ({ x: p.c, y: p["f(c)"] }))
-                        : metodo === "Newton-Raphson"
-                          ? resultado.pasos.map(p => ({ x: p.x, y: p["f(x)"] }))
-                          : [],
-                      pointBackgroundColor: 'red',
-                      pointBorderColor: 'red',
-                      showLine: false,
-                      borderColor: 'red',
-                    },
-                  ]
-                }}
-                options={{
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  interaction: {
-                    mode: 'nearest',
-                    intersect: false
-                  },
-                  plugins: {
-                    tooltip: {
-                      enabled: true,
+          {resultado?.raiz !== undefined &&
+            ["Bisección", "Newton-Raphson", "Regula-Falsi", "Secante"].includes(metodo) && (
+              <div className="grafico">
+                <h3>Gráfico de f(x):</h3>
+                <Line
+                  data={{
+                    datasets: [
+                      {
+                        label: 'f(x)',
+                        data: Array.from({ length: 100 }, (_, i) => {
+                          let left = a, right = b;
+                          if (metodo === "Newton-Raphson") {
+                            const xs = resultado.pasos.map(p => p.x);
+                            const minX = Math.min(...xs);
+                            const maxX = Math.max(...xs);
+                            const margin = (maxX - minX) * 0.2 || 1;
+                            left = minX - margin;
+                            right = maxX + margin;
+                          } else if (metodo === "Secante") {
+                            const xs = resultado.pasos.flatMap(p => [p.x0, p.x1]);
+                            const minX = Math.min(...xs);
+                            const maxX = Math.max(...xs);
+                            const margin = (maxX - minX) * 0.2 || 1;
+                            left = minX - margin;
+                            right = maxX + margin;
+                          }
+                          const xVal = left + (right - left) * (i / 99);
+                          try {
+                            return { x: xVal, y: eval(funcion.replace(/x/g, `(${xVal})`)) };
+                          } catch {
+                            return { x: xVal, y: null };
+                          }
+                        }),
+                        borderColor: 'blue',
+                        tension: 0.3,
+                        fill: false,
+                      },
+                      {
+                        label: 'Puntos de iteración',
+                        data:
+                          metodo === "Bisección"
+                            ? resultado.pasos.map(p => ({ x: p.c, y: p["f(c)"] }))
+                            : metodo === "Newton-Raphson"
+                              ? resultado.pasos.map(p => ({ x: p.x, y: p["f(x)"] }))
+                              : metodo === "Regula-Falsi"
+                                ? resultado.pasos.map(p => ({ x: p.c, y: p["f(c)"] }))
+                                : metodo === "Secante"
+                                  ? resultado.pasos.map(p => ({ x: p.x0, y: p["f(x0)"] }))
+                                  : [],
+                        pointBackgroundColor: 'red',
+                        pointBorderColor: 'red',
+                        showLine: false,
+                        borderColor: 'red',
+                      }
+                    ]
+                  }}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
                       mode: 'nearest',
-                      intersect: false,
-                      callbacks: {
-                        label: (ctx) => `x: ${ctx.parsed.x.toFixed(4)}, f(x): ${ctx.parsed.y.toFixed(4)}`
+                      intersect: false
+                    },
+                    plugins: {
+                      tooltip: {
+                        enabled: true,
+                        mode: 'nearest',
+                        intersect: false,
+                        callbacks: {
+                          label: (ctx) =>
+                            `x: ${ctx.parsed.x.toFixed(4)}, f(x): ${ctx.parsed.y.toFixed(4)}`
+                        }
+                      },
+                      legend: {
+                        display: true
                       }
                     },
-                    legend: {
-                      display: true
+                    scales: {
+                      x: { type: 'linear', title: { display: true, text: 'x' } },
+                      y: { title: { display: true, text: 'f(x)' } }
                     }
-                  },
-                  scales: {
-                    x: { type: 'linear', title: { display: true, text: 'x' } },
-                    y: { title: { display: true, text: 'f(x)' } }
-                  }
-                }}
-              />
-            </div>
-          )}
+                  }}
+                />
+              </div>
+            )}
         </div>
 
         {resultado?.raiz !== undefined && metodo === "Bisección" && (

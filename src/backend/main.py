@@ -3,6 +3,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from methods.bisection import bisection
 from methods.gauss_seidel import gauss_seidel
+from methods.gauss_jacobi import gauss_jacobi
 from methods.newton import newton_raphson
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
@@ -112,5 +113,16 @@ def calcular_regula_falsi(data: RegulaFalsiInput):
     try:
         raiz, pasos = regula_falsi(data.funcion, data.a, data.b, data.max_iter, data.tol)
         return {"raiz": raiz, "pasos": pasos}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/jacobi")
+def jacobi_controller(data: SistemaInput):
+    try:
+        solucion, pasos = gauss_jacobi(data.A, data.b, data.tol, data.max_iter)
+        return {
+            "solucion": solucion,
+            "pasos": pasos
+        }
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
