@@ -392,17 +392,50 @@ Si se alcanza el número máximo de iteraciones sin cumplir con la condición de
 
 ## 4. Interfaz de Usuario (Frontend)
 
-### 4.1 Tecnologías utilizadas
+4.1 Tecnologías utilizadas
+La interfaz de usuario de IteraX fue desarrollada utilizando tecnologías modernas del ecosistema web:
 
-<!-- Frameworks, librerías y estilos visuales aplicados -->
+- **React.js**: Biblioteca principal utilizada para construir la SPA (Single Page Application). Permite una experiencia dinámica, rápida y fluida.
 
-### 4.2 Componentes principales
+- **Chart.js (a través de react-chartjs-2)**: Utilizado para representar gráficamente los resultados de los métodos numéricos. Permite visualizaciones interactivas con tooltips, escalas y puntos de iteración.
 
-<!-- Qué vistas existen, qué acciones puede hacer el usuario -->
+- **CSS puro**: Los estilos fueron personalizados con App.css, utilizando flexbox para el diseño responsivo, y estilos definidos para formularios, tablas, botones y el panel lateral.
 
-### 4.3 Validación de datos
+- **Fetch API**: Para la comunicación HTTP entre el frontend y el backend.
 
-<!-- Cómo se validan las entradas del usuario -->
+4.2 Componentes principales
+La aplicación se organiza dentro de un único componente principal (App.jsx), que contiene todas las funcionalidades:
+
+a) Sidebar de métodos:
+
+- Muestra botones para seleccionar el método numérico a aplicar: Bisección, Regula Falsi, Newton-Raphson, Secante, Gauss-Seidel y Jacobi.
+- Cada botón cambia el estado actual y actualiza dinámicamente la vista principal.
+  
+b) Formulario dinámico:
+
+- Se renderizan campos específicos según el método seleccionado:
+    - Métodos de raíces: función, extremos a, b, valores x₀, x₁, tolerancia e iteraciones.
+    - Métodos de sistemas: matriz A y vector b.
+- Se valida cada campo y se muestra un botón para calcular.
+
+c) Resultados visuales:
+
+- Se muestra un gráfico f(x) con puntos rojos sobre las iteraciones (cuando aplica).
+- Se genera una tabla de iteraciones con los datos clave de cada método (por ejemplo, x, f(x), error).
+- 
+d) Comportamiento responsivo:
+
+- El diseño se adapta a distintas resoluciones de pantalla.
+- El contenido principal está dividido en secciones de ingreso, gráfico y resultados.
+  
+4.3 Validación de datos
+
+El sistema incorpora validación básica en el frontend antes de enviar los datos al backend:
+
+- Los campos numéricos (a, b, x0, x1, tolerancia, etc.) son validaciones por tipo usando .
+- Se controlan valores que no pueden ser vacíos o cero si el método lo requiere (por ejemplo, tolerancia).
+- Los errores de cálculo (como divisiones por cero o falta de convergencia) son capturados y mostrados al usuario como alertas.
+- Si ocurre un error inesperado, se muestra una notificación con el mensaje proveniente del backend.
 
 ## 5. Backend
 
