@@ -132,7 +132,103 @@ def secant(f, x0, x1, tol, max_iter):
 5. **Manejo de errores**  
    En caso de que la diferencia entre las evaluaciones de la función \(f(x_1) - f(x_0)\) sea cero, se lanza un error indicando que hubo una división por cero, lo que puede ocurrir si los dos puntos iniciales son iguales o si la función tiene un comportamiento inesperado.
 
-### 3.6 Jacobi
+### 3.6 Gauss-Jacobi
+El **método de Gauss-Jacobi** es una técnica iterativa utilizada para resolver sistemas de ecuaciones lineales de la forma:
+
+![image](https://github.com/user-attachments/assets/9eaf552b-0dd6-45b7-886e-bd45cfbdd3cf)
+
+Es especialmente útil cuando el sistema es grande y disperso. A diferencia del método de Gauss-Seidel, el método de Gauss-Jacobi **utiliza únicamente los valores de la iteración anterior** para calcular los nuevos valores, lo cual facilita su implementación en paralelo.
+
+---
+
+#### Implementación en IteraX
+
+El método de Gauss-Jacobi ha sido implementado en IteraX de la siguiente manera:
+
+```python
+def gauss_jacobi(A, b, tol=1e-5, max_iter=100):
+    n = len(A)
+    x = [0.0 for _ in range(n)]
+    pasos = []
+
+    for iteracion in range(1, max_iter + 1):
+        x_nuevo = x.copy()
+        for i in range(n):
+            suma = sum(A[i][j] * x[j] for j in range(n) if j != i)
+            x_nuevo[i] = (b[i] - suma) / A[i][i]
+        
+        error = max(abs(x_nuevo[i] - x[i]) for i in range(n))
+        pasos.append({"iteracion": iteracion, "valores": x_nuevo.copy(), "error": error})
+
+        if error < tol:
+            return x_nuevo, pasos
+        x = x_nuevo
+
+    return x, pasos
+```
+
+---
+
+#### Explicación del Algoritmo
+
+##### Valores Iniciales
+
+El vector inicial se define generalmente como:
+
+```python
+x = [0.0, 0.0, ..., 0.0]
+```
+
+o como otro valor elegido por el usuario. Este vector sirve como punto de partida para las iteraciones.
+
+---
+
+##### Fórmula de Actualización
+
+En cada iteración, para cada elemento x_i, el nuevo valor se calcula como:
+
+![image1](https://github.com/user-attachments/assets/edc8f74e-ed7c-4fca-82b4-ee2475705d84)
+
+**Importante:** Todos los valores x_j utilizados en esta ecuación provienen **de la iteración anterior**, a diferencia del método de Gauss-Seidel que usa los valores actualizados en cuanto están disponibles.
+
+---
+
+##### Condición de Parada
+
+La iteración se detiene cuando el error máximo entre los valores de iteraciones consecutivas es menor que la tolerancia especificada (`tol`), o cuando se alcanza el número máximo de iteraciones (`max_iter`):
+
+![image](https://github.com/user-attachments/assets/d2a42b7e-1a5d-4ab4-830d-2fe1afbdffba)
+
+
+---
+
+#### Resultados
+
+Durante cada iteración, el algoritmo almacena en una lista llamada `pasos`:
+
+- Número de la iteración
+- Vector de solución calculado
+- Error relativo/absoluto máximo de la iteración
+
+Esto permite rastrear el progreso y visualizar cómo se aproxima la solución a lo largo de las iteraciones.
+
+---
+
+#### Requisitos de Convergencia
+
+Para asegurar que el método de Gauss-Jacobi converge, la matriz \( A \) debe ser preferentemente **diagonalmente dominante**, es decir:
+
+![image](https://github.com/user-attachments/assets/9f2aa7c6-fbc7-4eeb-b53c-dffacde4d28d)
+
+Si esta condición no se cumple, el método podría no converger o hacerlo muy lentamente.
+
+---
+
+#### Manejo de Errores
+
+Si se alcanza el número máximo de iteraciones sin cumplir con la condición de parada, la función retorna el vector con los valores de la última iteración y todos los pasos realizados. Esto es útil para análisis posteriores, incluso si la convergencia total no fue alcanzada.
+
+---
 
 ## 4. Interfaz de Usuario (Frontend)
 
@@ -223,7 +319,3 @@ Al hacer una solicitud a esta ruta, el servidor ejecutará el método de la seca
 ## 7. Consideraciones finales
 
 <!-- Limitaciones actuales, posibles mejoras, decisiones de diseño técnico -->
-
-## 8. Anexos
-
-<!-- Ejemplos de entrada/salida, capturas de pantalla, enlaces útiles -->
