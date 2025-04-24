@@ -439,15 +439,78 @@ El sistema incorpora validación básica en el frontend antes de enviar los dato
 
 ### 5.1 Tecnologías utilizadas
 
-<!-- Lenguaje, framework, librerías matemáticas -->
+**Lenguaje:** Python 3.10+
+
+**Framework principal:** FastAPI – lo utilizamos para definir endpoints de la API REST que calculan métodos numéricos.
+
+**Librerías complementarias:**
+
+- pydantic – para validar la estructura de entrada de datos con modelos.
+
+- sympy – para derivación simbólica automática.
+
+- math – para funciones matemáticas estándar.
+
+- typing.List – para definir entradas tipo listas.
+
+- fastapi.middleware.cors.CORSMiddleware – para permitir la comunicación con el frontend en React desde otro dominio.
 
 ### 5.2 Estructura del código
 
-<!-- Organización de carpetas, controladores, servicios, etc. -->
+**Archivos principales:**
+main.py - Punto de entrada del backend. Define todos los endpoints de la API para cada método numérico. Implementa modelos de entrada con pydantic y configura CORS.
+  
+Carpeta methods/ - Contiene los módulos Python con las implementaciones específicas de cada método numérico:
+- bisection.py
+- newton.py
+- secant.py
+- regula_falsi.py
+- gauss_seidel.py
+- gauss_jacobi.py
 
 ### 5.3 Lógica de cálculo de métodos
 
-<!-- Cómo cada método es llamado y procesado en el backend -->
+Cada método numérico es expuesto como un endpoint tipo POST. El backend recibe los datos desde el frontend, realiza el cálculo correspondiente y retorna un JSON con los resultados. A continuación, se resumen los endpoints:
+
+/biseccion
+- Entrada: función f(x), intervalo [a, b], tolerancia y cantidad máxima de iteraciones.
+
+- Proceso: Evalúa f en cada iteración hasta cumplir la tolerancia.
+
+- Salida: raíz aproximada y pasos intermedios.
+
+/newton
+- Entrada: función f(x), valor inicial x0, tolerancia, iteraciones máximas.
+
+- Proceso: Usa sympy para derivar simbólicamente la función, luego aplica Newton-Raphson.
+
+- Salida: raíz aproximada y lista de iteraciones con errores.
+
+/secant
+- Entrada: función f(x), dos valores iniciales x0 y x1, tolerancia, iteraciones.
+
+- Proceso: Aplica el método de la secante para encontrar la raíz.
+
+- Salida: raíz y detalle paso a paso.
+
+/regula-falsi
+- Entrada: función f(x), extremos a, b, tolerancia, iteraciones máximas.
+
+- Proceso: Implementa el método de la falsa posición para converger a la raíz.
+
+- Salida: raíz y pasos intermedios.
+
+/gauss-seidel y /jacobi
+- Entrada: matriz A, vector b, tolerancia, iteraciones máximas.
+
+- Proceso: Iteran hasta encontrar la solución del sistema lineal 
+𝐴
+𝑥
+=
+𝑏
+Ax=b.
+
+- Salida: solución aproximada y vector de errores en cada iteración.
 
 ## 6. Integración Frontend ↔ Backend (API REST)
 
