@@ -391,7 +391,7 @@ Si se alcanza el número máximo de iteraciones sin cumplir con la condición de
 
 ## 4. Interfaz de Usuario (Frontend)
 
-4.1 Tecnologías utilizadas
+### 4.1 Tecnologías utilizadas
 La interfaz de usuario de IteraX fue desarrollada utilizando tecnologías modernas del ecosistema web:
 
 - **React.js**: Biblioteca principal utilizada para construir la SPA (Single Page Application). Permite una experiencia dinámica, rápida y fluida.
@@ -402,33 +402,32 @@ La interfaz de usuario de IteraX fue desarrollada utilizando tecnologías modern
 
 - **Fetch API**: Para la comunicación HTTP entre el frontend y el backend.
 
-4.2 Componentes principales
+### 4.2 Componentes principales
 La aplicación se organiza dentro de un único componente principal (App.jsx), que contiene todas las funcionalidades:
 
-a) Sidebar de métodos:
+a) **Sidebar de métodos**:
 
 - Muestra botones para seleccionar el método numérico a aplicar: Bisección, Regula Falsi, Newton-Raphson, Secante, Gauss-Seidel y Jacobi.
 - Cada botón cambia el estado actual y actualiza dinámicamente la vista principal.
   
-b) Formulario dinámico:
+b) **Formulario dinámico**:
 
 - Se renderizan campos específicos según el método seleccionado:
     - Métodos de raíces: función, extremos a, b, valores x₀, x₁, tolerancia e iteraciones.
     - Métodos de sistemas: matriz A y vector b.
 - Se valida cada campo y se muestra un botón para calcular.
 
-c) Resultados visuales:
+c) **Resultados visuales**:
 
 - Se muestra un gráfico f(x) con puntos rojos sobre las iteraciones (cuando aplica).
 - Se genera una tabla de iteraciones con los datos clave de cada método (por ejemplo, x, f(x), error).
-- 
-d) Comportamiento responsivo:
+
+d) **Comportamiento responsivo**:
 
 - El diseño se adapta a distintas resoluciones de pantalla.
 - El contenido principal está dividido en secciones de ingreso, gráfico y resultados.
   
-4.3 Validación de datos
-
+### 4.3 Validación de datos
 El sistema incorpora validación básica en el frontend antes de enviar los datos al backend:
 
 - Los campos numéricos (a, b, x0, x1, tolerancia, etc.) son validaciones por tipo usando .
