@@ -220,7 +220,7 @@ def newton_raphson(f, df, x0, tol, max_iter):
 #### Recomendaciones
 
 - Elegir un valor inicial \( x0 \) cercano a la raíz.
-- Verificar que \( f'(x0) \neq 0 \) para evitar errores.
+- Verificar que \( f'(x0) \) distinto a 0 para evitar errores.
 - Ideal para funciones suaves y con derivadas conocidas.
 
 ### 3.4 Secante
