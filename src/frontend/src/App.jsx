@@ -54,7 +54,7 @@ function App() {
           body: JSON.stringify({ funcion, a, b, tol, max_iter: maxIter })
         });
       } else if (metodo === "Regula-Falsi") {
-        res = await fetch("http://localhost:8000/regula_falsi", {
+        res = await fetch("http://localhost:8000/regula-falsi", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ funcion, a, b, tol, max_iter: maxIter })
@@ -72,7 +72,7 @@ function App() {
           body: JSON.stringify({ funcion, x0, tol, max_iter: maxIter })
         });
       } else if (metodo === "Gauss-Seidel") {
-        res = await fetch("http://localhost:8000/gauss_seidel", {
+        res = await fetch("http://localhost:8000/gauss-seidel", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ A: matriz, b: vectorB, tol, max_iter: maxIter })
@@ -223,7 +223,6 @@ function App() {
                 ))}
               </>
             )}
-
 
             <label>Tolerancia:</label>
             <input type="number" value={tol} onChange={e => setTol(e.target.value)} />
