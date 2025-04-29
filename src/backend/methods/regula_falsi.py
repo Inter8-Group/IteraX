@@ -15,7 +15,7 @@ def __crear_funcion(func_str):
         return eval(func_str, {"x": x, "np": np, "numpy": np, "__builtins__": {}})
     return f
 
-def regulacion_falsa(func_str, a, b, itermax=10, error_maximo=1e-6):
+def regula_falsi(func_str, a, b, itermax=10, error_maximo=1e-6):
     """
     Implementa el método de Regula Falsi para encontrar una raíz de la función
     dentro del intervalo [a, b], usando una cantidad máxima de iteraciones y
