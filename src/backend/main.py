@@ -111,8 +111,12 @@ def secant_controller(data: SecantInput):
 @app.post("/regula-falsi")
 def calcular_regula_falsi(data: RegulaFalsiInput):
     try:
-        raiz, pasos = regula_falsi(data.funcion, data.a, data.b, data.max_iter, data.tol)
-        return {"raiz": raiz, "pasos": pasos}
+        raiz, pasos, grafico = regula_falsi(data.funcion, data.a, data.b, data.max_iter, data.tol)
+        return {
+            "raiz": raiz,
+            "pasos": pasos,
+            "grafico": f"data:image/png;base64,{grafico}"
+        }
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
