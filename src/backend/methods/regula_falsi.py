@@ -1,40 +1,21 @@
 import numpy as np
+import matplotlib.pyplot as plt
+import io
+import base64
 
 def __crear_funcion(func_str):
     """
     Convierte una cadena que representa una función matemática
     en una función evaluable en Python.
-
-    Parámetro:
-    - func_str: str, función matemática (ejemplo: "x**2 - 4")
-
-    Retorna:
-    - función evaluable f(x)
     """
     def f(x):
         return eval(func_str, {"x": x, "np": np, "numpy": np, "__builtins__": {}})
     return f
 
 def regula_falsi(func_str, a, b, itermax=10, error_maximo=1e-6):
-    """
-    Implementa el método de Regula Falsi para encontrar una raíz de la función
-    dentro del intervalo [a, b], usando una cantidad máxima de iteraciones y
-    una tolerancia de error.
-
-    Parámetros:
-    - func_str: str, función matemática como cadena (ejemplo: "x**2 - 4")
-    - a: float, extremo izquierdo del intervalo
-    - b: float, extremo derecho del intervalo
-    - itermax: int, número máximo de iteraciones (default=10)
-    - error_maximo: float, tolerancia del error (default=1e-6)
-
-    Retorna:
-    - tabla_resultado: list[dict], lista con los datos de cada iteración
-    """
     F = __crear_funcion(func_str)
     tabla_resultado = []
 
-    # Verifica que f(a) y f(b) tengan signos opuestos
     if F(a) * F(b) > 0:
         raise ValueError("Intervalo inválido: f(a) * f(b) > 0")
 
@@ -43,25 +24,24 @@ def regula_falsi(func_str, a, b, itermax=10, error_maximo=1e-6):
     x_anterior = a
     fa = F(a)
     fb = F(b)
+    puntos_x = []
 
-    # Itera hasta alcanzar el máximo de iteraciones o que el error sea aceptable
     while iteracion < itermax and error > error_maximo:
         iteracion += 1
-        # Punto medio calculado por la fórmula de regula falsi
         x = (a * fb - b * fa) / (fb - fa)
         fx = F(x)
+        puntos_x.append(x)
 
-        # Guarda datos de la iteración
         paso = {
-            "iteración": iteracion,
-            "a": a,
-            "b": b,
-            "x": x,
-            "f(x)": fx
+            "iteracion": iteracion,
+            "a": round(a, 6),
+            "b": round(b, 6),
+            "c": round(x, 6),
+            "f(c)": f"{fx:.4e}",
+            "error": f"{error:.4e}" if iteracion > 1 else "---"
         }
         tabla_resultado.append(paso)
 
-        # Actualiza el intervalo dependiendo del signo
         if fa * fx < 0:
             b = x
             fb = fx
@@ -69,9 +49,30 @@ def regula_falsi(func_str, a, b, itermax=10, error_maximo=1e-6):
             a = x
             fa = fx
 
-        # Calcula el error relativo
         error = abs(x - x_anterior)
         x_anterior = x
 
-    return tabla_resultado
+    # Graficar f(x)
+    x_vals = np.linspace(a - 1, b + 1, 200)
+    y_vals = [F(xi) for xi in x_vals]
+
+    plt.figure(figsize=(8, 4))
+    plt.plot(x_vals, y_vals, label="f(x)", color='blue')
+    plt.axhline(0, color='black', linestyle='--')
+    plt.scatter(puntos_x, [F(xi) for xi in puntos_x], color='red', label='Puntos de iteración')
+    plt.title("Método de Regula-Falsi")
+    plt.xlabel("x")
+    plt.ylabel("f(x)")
+    plt.legend()
+    plt.grid(True)
+
+    buffer = io.BytesIO()
+    plt.tight_layout()
+    plt.savefig(buffer, format='png')
+    plt.close()
+    buffer.seek(0)
+    imagen_base64 = base64.b64encode(buffer.read()).decode('utf-8')
+
+    return x, tabla_resultado, imagen_base64
+
 
